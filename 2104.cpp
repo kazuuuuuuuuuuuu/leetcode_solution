@@ -132,7 +132,8 @@ long long subArrayRanges(vector<int>& nums)
     // n作为所有栈中元素的失效位置
     for(int i = 0;i<=n;i++)
     {
-        // find maixmum
+        // find next great element
+        // n -> clean up the stack
         while(!decre.empty()&&(i==n||nums[decre.top()]<=nums[i]))
         {
             int mid = decre.top();
@@ -142,7 +143,8 @@ long long subArrayRanges(vector<int>& nums)
         }
         decre.push(i);
 
-        // find minimum
+        // find next smell element
+        // n -> clean up the stack
         while(!incre.empty()&&(i==n||nums[incre.top()]>=nums[i]))
         {
             int mid = incre.top();

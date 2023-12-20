@@ -106,3 +106,60 @@ public:
         }
     }
 };
+
+
+
+class Solution {
+public:
+    // there are repetitive numbers in the arr
+    unordered_map<int, vector<int>> map;
+    vector<int> arr;
+    int difference;
+    vector<int> memo;
+    int ans = 0;
+
+    int longestSubsequence(vector<int>& arr, int difference) 
+    {
+        this->difference = difference;
+        this->arr = arr;
+        memo = vector<int> (arr.size(), -1);
+
+        for(int i=0;i<arr.size();i++)
+        {   
+            // value : indices of that value
+            // vector is ordered
+            map[arr[i]].push_back(i);
+        }
+        dp(0);
+        return ans;
+    }
+
+    // the current index -> return the ans to the original question
+    int dp(int i)
+    {
+        // base case
+        if(i==arr.size())
+            return 0;
+        if(memo[i]!=-1)
+            return memo[i];
+
+        int local = 1;
+        int value = arr[i];
+        int next_value = value + difference;
+        if(map.find(next_value)!=map.end())
+        {
+            vector<int> &target_vector = map[next_value];
+            auto next_index = upper_bound(target_vector.begin(), target_vector.end(), i);
+            if(next_index!=target_vector.end())
+            {
+                local += dp(*next_index);
+            }
+        }
+        dp(i+1);
+        ans = max(ans, local);
+        memo[i] = local;
+        return local;
+    }    
+};
+
+
