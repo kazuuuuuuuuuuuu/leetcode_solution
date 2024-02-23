@@ -44,3 +44,23 @@ ListNode* swapPairs(ListNode* head)
     return dummy;
 }
 };
+
+class Solution {
+public:
+    ListNode* swapPairs(ListNode* head) 
+    {
+        ListNode *dummy = new ListNode();
+        dummy->next = head;
+        ListNode * curr = dummy;
+        while(curr->next!=nullptr&&curr->next->next!=nullptr)
+        {
+            ListNode *prev = curr->next;
+            ListNode *after = curr->next->next->next;
+            curr->next = curr->next->next;
+            curr->next->next = prev;
+            prev->next = after;
+            curr = prev;
+        }
+        return dummy->next;
+    }
+};
