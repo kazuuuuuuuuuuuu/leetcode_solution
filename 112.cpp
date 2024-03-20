@@ -1,21 +1,33 @@
 class Solution {
 public:
-
-    int target;
-
-    bool hasPathSum(TreeNode* root, int targetSum) {
-        target = targetSum;
-        return fun(root, 0)
+    bool hasPathSum(TreeNode* root, int targetSum)
+    {
+        if(root) // corner case
+            return traverse(root, targetSum);
+        return false;
     }
 
-    bool fun(TreeNode* root, int curr)
+    bool traverse(TreeNode* node, int curr)
     {
-        if(!root)
-            return false;
-        if(root->left==nullptr&&root->right==nullptr)
-            return curr+root->val==target;
-        curr += root->val;
-        return fun(root->left, curr) || fun(root->right, curr);
+        // 中
+        curr -= node->val;
+        if(node->left==NULL&&node->right==NULL)
+        {
+            if(curr==0) return true;
+            else return false;
+        }
+        //左
+        if(node->left) // 非引用 不需要回溯
+        {
+            if(traverse(node->left,curr))
+                return true;
+        }
+        // 右
+        if(node->right)
+        {
+            return traverse(node->right,curr);
+        }
+        return false;
     }
 };
 
@@ -79,3 +91,4 @@ bool hasPathSum(TreeNode* root, int targetSum)
     return false;
 
 }
+

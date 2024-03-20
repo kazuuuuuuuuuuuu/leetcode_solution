@@ -1,15 +1,15 @@
-class Solution {
-public:
-    int maxDepth(TreeNode* root) {
-        if(!root)
-            return 0;
-        int left = maxDepth(root->left);
-        int right = maxDepth(root->right);
+// 大问题转换为小问题
+// 后序遍历
+int maxDepth(TreeNode* root) 
+{
+    if(root==NULL) return 0;
+    int left = maxDepth(root->left);
+    int right = maxDepth(root->right);
+    int result = 1 + max(left, right);
+    return result;        
+}
 
-        return max(left, right) + 1;
-    }
-};
-
+// 通过前序遍历从上往下求每个节点的深度 -> 每次保存一个最大深度
 int maxDepth(TreeNode* root) {
         if (root == nullptr) {
             return 0;
@@ -35,4 +35,6 @@ int maxDepth(TreeNode* root) {
         
         return ans;
     }
-};
+
+
+

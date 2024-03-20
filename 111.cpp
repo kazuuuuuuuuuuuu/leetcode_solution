@@ -1,61 +1,52 @@
 
-
-// recuresion
+// recuresion 后序遍历 大问题转换为小问题
 class Solution {
 public:
-    int minDepth(TreeNode* root) {
-        if(root==nullptr)
+    int minDepth(TreeNode* root) 
+    {
+        if(root==NULL)
             return 0;
+        int left = minDepth(root->left);
+        int right = minDepth(root->right);
 
-
-        if(root->left==nullptr&&root->right==nullptr)
-            return 1;
-
-        if(root->left!=nullptr&&root->right!=nullptr)
-        {
-            int left = minDepth(root->left);
-            int right = minDepth(root->right);
-
-            return min(left, right) + 1;            
-        }
-        if(root->left!=nullptr)
-            return minDepth(root->left) + 1;
-
-        return minDepth(root->right) + 1;
+        if(left==0&&right!=0)
+            return right + 1;
+        if(left!=0&&right==0)
+            return left + 1;
+        return 1 + min(left, right);
     }
 };
 
-// iteration
-// while updating the minimum depth when we reach the leaf node.
+// updating the minimum depth when we reach the leaf node.
+class Solution {
+public:
 int minDepth(TreeNode* root)
 {
-    if(!root)
-        return 0;
-    int ans = INT_MAX;
-    stack<pair<TreeNode*, int>> stack;
 
-    stack.push(pair(root, 1));
-
-    while(!stack.empty())
-    {
-        auto[node, layer] = stack.top();
-        stack.pop();
-
-        if(node->left==nullptr&&node->right==nullptr)
-        {
-            ans = min(ans, layer);
+        if (root == nullptr) {
+            return 0;
         }
-
-        layer ++;
-
-        if(node->left!=nullptr)
-        {
-            stack.push(pair(node->left, layer));
+        
+        stack<pair<TreeNode*, int>> stack;
+        stack.push(pair(root, 1));
+        int ans = INT_MAX;
+        
+        while (!stack.empty()) {
+            auto [node, depth] = stack.top();
+            stack.pop();
+            if(node->left==NULL&&node->right==NULL)
+                ans = min(ans, depth);
+            
+            if (node->left != nullptr) {
+                stack.push(pair(node->left, depth + 1));
+            }
+            
+            if (node -> right != nullptr) {
+                stack.push(pair(node->right, depth + 1));
+            }
         }
-        if(node->right!=nullptr)
-        {
-            stack.push(pair(node->right, layer));
-        }
-    }
-    return ans;
+        
+        return ans;
+   
 }
+};

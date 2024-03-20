@@ -18,3 +18,22 @@ public:
         return stack;
     }
 };
+
+
+class Solution {
+public:
+    string removeDuplicates(string s) 
+    {
+        string ans = "";
+        for(char a : s)
+        {
+            if(ans.empty()||ans.back()!=a)
+            {
+                ans.push_back(a);
+            }
+            else
+                ans.pop_back();
+        }
+        return ans;
+    }
+};

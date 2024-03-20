@@ -1,30 +1,32 @@
+
+//  level order reversal
 class Solution {
 public:
-    vector<vector<int>> levelOrder(TreeNode* root) {
-        vector<int> layer;
+    vector<vector<int>> levelOrder(TreeNode* root) 
+    {
         vector<vector<int>> ans;
-        if(!root)
-            return ans;
+        queue<TreeNode*> q;
+        if(root)
+            q.push(root);
 
-        queue<TreeNode*> queue;
-        queue.push(root);
-
-        while(!queue.empty())
+        while(!q.empty())
         {
-            int length = queue.size();
-            layer.clear();
-            for(int i=0;i<length;i++)
-            {
-                TreeNode* curr = queue.front();
-                queue.pop();
+            int size = q.size();
+            vector<int> level;
 
-                layer.push_back(curr->val);
+            for(int i=0;i<size;i++)
+            {
+                TreeNode *curr = q.front();
+                q.pop();
+
+                level.push_back(curr->val);
                 if(curr->left)
-                    queue.push(curr->left);
+                    q.push(curr->left);
                 if(curr->right)
-                    queue.push(curr->right);
+                    q.push(curr->right);
             }
-            ans.push_back(layer);
+
+            ans.push_back(level);
         }
         return ans;
     }
