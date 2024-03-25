@@ -63,3 +63,18 @@ TreeNode* insertIntoBST(TreeNode* root, int val)
         prev->left = new TreeNode(val);
     return root;
 }
+
+TreeNode* insertIntoBST(TreeNode* root, int val)
+{
+    if(root==NULL)
+    {
+        root = new TreeNode(val);
+        return root;
+    }
+    // 改变一下子树的结构 然后重新接回来 左子树重新回到左子树 右子树重新回到右子树
+    if(root->val>val)
+        root->left = insertIntoBST(root->left, val);
+    if(root->val<val)
+        root->right = insertIntoBST(root->right, val);
+    return root;
+}
