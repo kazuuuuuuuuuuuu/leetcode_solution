@@ -1,41 +1,39 @@
 class Solution {
 public:
+    unordered_map<char, string> map;
+    string digits;
+    vector<string> ans;
+    string s;
     vector<string> letterCombinations(string digits) 
     {
-        unordered_map<char, vector<char>> map;
-        map['2'] = {'a', 'b', 'c'};
-        map['3'] = {'d', 'e', 'f'};
-        map['4'] = {'g', 'h', 'i'};
-        map['5'] = {'j', 'k', 'l'};
-        map['6'] = {'m', 'n', 'o'};
-        map['7'] = {'p', 'q', 'r', 's'};
-        map['8'] = {'t', 'u', 'v'};
-        map['9'] = {'w', 'x', 'y', 'z'};
-        vector<string> ans;
         if(digits=="")
             return ans;
-        string curr = "";
-        backtrack(digits, 0, curr, ans, map);
+        map['2'] = "abc";
+        map['3'] = "def";
+        map['4'] = "ghi";
+        map['5'] = "jkl";
+        map['6'] = "mno";
+        map['7'] = "pqrs";
+        map['8'] = "tuv";
+        map['9'] = "wxyz";
+        this->digits = digits;
+        backtrack(0);
         return ans;
-
     }
 
-    void backtrack(string &digits, int i, string &curr, vector<string> &ans, unordered_map<char, vector<char>> &map)
+    void backtrack(int index)
     {
-        // base case -> recursion
-        if(i==digits.size())
+        if(index==digits.size())
         {
-            ans.push_back(curr);
-            return;
+            ans.push_back(s);
         }
-
-        for(char a : map[digits[i]])
+        char num = digits[index];
+        string chars = map[num];
+        for(auto a : chars)
         {
-            curr += a;
-            backtrack(digits, i+1, curr, ans, map);
-            curr.pop_back();
+            s.push_back(a);
+            backtrack(index+1);
+            s.pop_back();
         }
     }
 };
-
-

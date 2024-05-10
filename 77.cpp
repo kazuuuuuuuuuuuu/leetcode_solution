@@ -1,28 +1,26 @@
-// subset
 class Solution {
 public:
+    vector<vector<int>> ans;
+    vector<int> path;
     vector<vector<int>> combine(int n, int k) 
     {
-        vector<vector<int>> ans;
-        vector<int> curr = {};
-        backtrack(n, k, 1, curr, ans);
-        return ans;      
+        backtrack(1, n, k);
+        return ans;
     }
 
-    void backtrack(int n, int k, int i, vector<int> &curr, vector<vector<int>> &ans)
+    void backtrack(int start, int n, int k)
     {
-        if(curr.size()==k)
-        {
-            ans.push_back(curr);
-            return;
-        }
+        if(path.size()==k)
+            ans.push_back(path);
 
-        for(int j=i;j<=n;j++)
+        for(int i=start;i<=n;i++)  // for循环为同一层横向延伸
         {
-            curr.push_back(j);
-            // move to the child node
-            backtrack(n, k, j+1, curr, ans);
-            curr.pop_back();
+            // 在同一层 处做剪枝
+            if(n-i+1<k-path.size()) // 剩下待选的元素 不够组成一个完整长度的path
+                continue; 
+            path.push_back(i);
+            backtrack(i+1, n, k); // backtrack为向下延伸
+            path.pop_back();
         }
     }
 };

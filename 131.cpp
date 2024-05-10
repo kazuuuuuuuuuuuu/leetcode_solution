@@ -1,50 +1,45 @@
 class Solution {
 public:
-    int n;
+    vector<vector<string>> ans;
+    vector<string> path;
     string s;
     vector<vector<string>> partition(string s) 
     {
         this->s = s;
-        n = s.size();
-        vector<vector<string>> ans;
-        vector<string> curr;
-        backtrack(0, ans, curr);
+        backtrack(0);
         return ans;
     }
 
-    // 注意同层 和 递归（下一层对输入参数的改变）
-    void backtrack(int start, vector<vector<string>> &ans, vector<string> &curr)
+    void backtrack(int startindex)
     {
-        if(start==n)
+        if(startindex==s.size()) // 所有可以走到叶子节点的都是答案
         {
-            ans.push_back(curr);
-            return;
+            ans.push_back(path);
         }
+
         string level = "";
-        for(int i=start;i<n;i++)
+        for(int i=startindex;i<s.size();i++)
         {
             level += s[i];
-            if(valid(level))
-            {
-                curr.push_back(level);
-                backtrack(i+1, ans, curr);
-                curr.pop_back();
-            }
-        }
+            if(!isvalid(startindex, i))
+                continue;
+            path.push_back(level);
+            backtrack(i+1);
+            path.pop_back();
 
+
+        }
     }
 
-    bool valid(string &str)
+    bool isvalid(int start, int end) // 二元谓词函数
     {
-        int i = 0;
-        int j = str.size()-1;
-        while(i<j)
+        while(start<end)
         {
-            if(str[i]!=str[j])
+            if(s[start]!=s[end])
                 return false;
-            i ++;
-            j --;
+            start ++;
+            end --;
         }
         return true;
-    }
+    }    
 };

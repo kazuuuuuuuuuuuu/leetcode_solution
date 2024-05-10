@@ -2,22 +2,30 @@ class Solution {
 public:
     vector<vector<int>> merge(vector<vector<int>>& intervals) 
     {
-        // o(n*logn)
-        // space complexity is dependent on the implementation
-        sort(intervals.begin(), intervals.end());
         vector<vector<int>> ans;
-        for(vector<int> &interval : intervals)
+        if(intervals.size()==0) return ans;
+        
+        sort(intervals.begin(), intervals.end(), cmp);
+        ans.push_back(intervals[0]);
+        for(int i=1;i<intervals.size();i++)
         {
+            vector<int> interval = intervals[i];
             int start = interval[0];
             int end = interval[1];
-            if(!ans.empty()&&ans[ans.size()-1][1]>=start)
+            if(start<=ans.back()[1])
             {
-                // the end is equal to the maximum one of the two overlapping intervals
-                ans[ans.size()-1][1] = max(end, ans[ans.size()-1][1]);
+                ans.back()[1] = max(ans.back()[1], end);
             }
             else
+            {
                 ans.push_back(interval);
-        }  
-        return ans; 
+            }
+        }
+        return ans;
+    }
+
+    static bool cmp(const vector<int> &a, const vector<int> &b)
+    {
+        return a[0] < b[0];
     }
 };

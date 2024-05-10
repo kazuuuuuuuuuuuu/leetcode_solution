@@ -13,11 +13,12 @@ public:
             return 1;
         if(i==2)
             return 2;
+
         if(memo[i]!=-1)
             return memo[i];
-        int ans = 0;
-        ans += dp(i-1);
-        ans += dp(i-2);
+
+        int ans;
+        ans = dp(i-1) + dp(i-2);
         memo[i] = ans;
         return ans;
     }

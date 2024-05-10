@@ -1,28 +1,29 @@
+// 双指针 遍历两个数组 + 贪婪
 class Solution {
 public:
     int findContentChildren(vector<int>& g, vector<int>& s) 
     {
-        // if each vector has been sorted
+        // g -> child array
         sort(g.begin(), g.end());
         sort(s.begin(), s.end());
-        int i = 0;
-        int n = s.size();
-        int ans = 0;
-        for(int child : g)
+
+        int result = 0;
+
+        int i = g.size()-1;
+        int j = s.size()-1;
+        while(i>=0&&j>=0)
         {
-            while(i<n&&s[i]<child)
+            if(s[j]>=g[i])
             {
-                i ++;
-            }
-            //  如果是合理的结果  答案增加 并且移动到下一个曲奇
-            if(i<n)
-            {
-                ans ++;
-                i ++;
+                result ++;
+                i --;
+                j --;
             }
             else
-                break;
+            {
+                i --;
+            }
         }
-        return ans;
+        return result;
     }
 };

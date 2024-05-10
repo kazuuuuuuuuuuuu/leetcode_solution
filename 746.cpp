@@ -5,22 +5,23 @@ public:
     vector<int> memo;
     int minCostClimbingStairs(vector<int>& cost) 
     {
-        int n = cost.size();
         this->cost = cost;
+        int n = cost.size();
         memo = vector<int> (n+1, -1);
-        return dp(n);    
+        return dp(n);
     }
 
-    int dp(int state)
+    int dp(int i)
     {
-        if(state<2)
+        if(i==0||i==1)
             return 0;
-        // 已经计算过答案
-        if(memo[state]!=-1)
-            return memo[state];
+        if(memo[i]!=-1)
+            return memo[i];
 
-        memo[state] = min(dp(state-1)+cost[state-1], dp(state-2)+cost[state-2]);
-        return memo[state];
+        int ans;
+        ans = min(dp(i-1)+cost[i-1], dp(i-2)+cost[i-2]);
+        memo[i] = ans;
+        return ans;
     }
 };
 // bottom-up dp

@@ -61,3 +61,40 @@ public:
         }
     }
 };
+
+class Solution {
+public:
+    // 修改子树 然后返回给上一级的节点 用对应的左右子树接住
+    TreeNode* deleteNode(TreeNode* root, int key) 
+    {
+        // exit1
+        if(root==NULL) return NULL;
+        // exit2
+        // 通过跳过要删除节点的方式 来删除节点
+        if(root->val==key)
+        {
+            if(root->left==NULL&&root->right==NULL)
+                return NULL;
+            if((root->left!=NULL&&root->right==NULL))
+                return root->left;
+            if((root->left==NULL&&root->right!=NULL))
+                return root->right;
+            else
+            {
+                TreeNode* curr = root->right;
+                while(curr->left)
+                {
+                    curr = curr->left;
+                }
+                curr->left = root->left;
+                return root->right;
+            }
+        }
+        if(root->val<key)
+            root->right = deleteNode(root->right, key);
+        if(root->val>key)
+            root->left = deleteNode(root->left, key);
+        return root;
+    }
+};
+

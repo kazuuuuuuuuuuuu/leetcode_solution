@@ -2,24 +2,31 @@ class Solution {
 public:
     int largestSumAfterKNegations(vector<int>& nums, int k) 
     {
-        sort(nums.begin(), nums.end());
-        long ans = 0;
-        int j = 0;
-        for(int i=0;i<k;i++)
+        int ans = 0;
+        sort(nums.begin(), nums.end(), compare);
+        for(int i=0;i<nums.size();i++)
         {
-            if(nums[j]<0)
+            if(nums[i]<0&&k>0)
             {
-                nums[j] = -nums[j];
-                if(j<nums.size()-1&&(nums[j+1]<0 || nums[j+1]<nums[j]))
-                {
-                    j ++;
-                }
+                k --;
+                nums[i] *= -1;
             }
-            else
-                nums[j] = -nums[j];
+
+            if(i==(nums.size()-1)&&k%2==1)
+            {
+                nums[nums.size()-1] *= -1;
+            }
+
+            ans += nums[i];
         }
-        ans = accumulate(nums.begin(), nums.end(), 0);
         return ans;
+    }
+
+    // static -> 不使用对象也可以调用的类方法 
+    // 最后就按照 > 的顺序 一直排列下去
+    static bool compare(int &a, int &b)
+    {
+        return abs(a)>abs(b);
     }
 };
 

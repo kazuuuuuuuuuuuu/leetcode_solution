@@ -1,69 +1,52 @@
-// 0 - 255 inclusive without leading zero
+
+// substr(begin_index, substr_length)
 class Solution {
 public:
+    vector<string> ans;
+    string path;
     string s;
     vector<string> restoreIpAddresses(string s) 
     {
         this->s = s;
-        string curr = "";
-        vector<string> ans;
-        backtrack(ans, curr, 0, 0);
+        backtrack(0, 0);
         return ans;
     }
 
-    // 确定一次dot的位置
-    void backtrack(vector<string> &ans, string curr, int dot, int i)
+    void backtrack(int startindex, int division_numbers)
     {
-        string block = "";
-        // base case
-        if(dot==3)
+        if(division_numbers==3)
         {
-            // 排除几种问题
-            // 最后剩下的位数太多
-            if(i+3<s.size())
-                return;
-            // 最后一个都没剩
-            if(i==s.size())
-                return;
-            // 最受剩下的是以0开头的多位数
-            if(s[i]=='0'&&i+1<s.size())
-                return;
-
-            while(i<s.size())
+            if(isvalid(startindex, s.size()-1))
             {
-                block += s[i];
-                i ++;
-            }
-            if(stoi(block)<=255)
-            {
-                curr += block;
-                ans.push_back(curr);
+                string last_part = s.substr(startindex, s.size()-startindex);
+                ans.push_back(path+last_part);
             }
             return;
         }
 
-        if(s[i]=='0')
+        string level = "";
+        int origin_size = path.size();
+        for(int i=startindex;i<s.size();i++)
         {
-            curr += s[i];
-            curr += '.';
-            i ++;
-            backtrack(ans, curr, dot+1, i);
-            // 同层没有其他元素不需要回溯
-        }
-        else
-        {
-            while(i<s.size()&&stoi(block+s[i])<=255)
-            {
-                // 这三个变化同层共享 并且其他层之间没有&符号 不会做修改 不需要回溯
-                block += s[i];
-                curr += s[i];
-                i ++;
+            level += s[i];
+            if(!isvalid(startindex, i))
+                continue;
 
-                curr += '.';
-                backtrack(ans, curr, dot+1, i);
-                // 同层有其他元素需要回溯
-                curr.pop_back();
-            } 
+            path += level + '.';
+            backtrack(i+1, division_numbers+1);
+            path = path.substr(0, origin_size); //回溯
         }
+    }
+
+    // 判断数字是否合法 -> 0 - 255 inclusive without leading zero
+    bool isvalid(int start, int end)
+    {
+        if(end-start>2) return false;
+        if(start>=s.size()) return false;
+        if(start<end&&s[start]=='0') return false;
+        
+        int num = stoi(s.substr(start, end-start+1));
+        if(num>=0&&num<=255) return true;
+        else return false;
     }
 };

@@ -1,44 +1,42 @@
 class Solution {
 public:
-    int target;
+    vector<vector<int>> ans;
+    vector<int> path;
+    int *used; // 标记使用过的元素
     vector<int> candidates;
-    int n;
     vector<vector<int>> combinationSum2(vector<int>& candidates, int target) 
     {
-    
-        n = candidates.size();
-        this->target = target;
-        sort(candidates.begin(), candidates.end());   
+        sort(candidates.begin(), candidates.end());
         this->candidates = candidates;
-        vector<vector<int>> ans;
-        vector<int> curr;
-        backtrack(ans, curr, 0, 0);
+   
+        int n = candidates.size();   
+        used = new int[n];
+        memset(used, 0, sizeof(int) * n);
+     
+        backtrack(0, 0, target);
+        delete [] used;
         return ans;
     }
 
-    // index确保排序后 只向后找candidates 不会再向前查找
-    void backtrack(vector<vector<int>> &ans, vector<int> &curr, int index, int sum)
+    void backtrack(int startindex, int sum, int target) // startindex -> 之前考虑过的元素都不再考虑 避免重复
     {
+        if(sum>target) return;
         if(sum==target)
         {
-            ans.push_back(curr);
+            ans.push_back(path);
             return;
         }
 
-        int last = candidates[index];
-        for(int i=index;i<n;i++)
+        for(int i=startindex;i<candidates.size();i++)
         {
-            int num = candidates[i];
-            // 节点的下一个节点不能相同 相同的话直接跳过
-            if(i!=index&&num==last)
+            // 前一个相同元素没被使用过 -> 同层的相同元素 -> 去重
+            if(i>0&&candidates[i]==candidates[i-1]&&used[i-1]==0)
                 continue;
-            if(num+sum<=target)
-            {
-                last = num;
-                curr.push_back(num);
-                backtrack(ans, curr, i+1, sum+num);
-                curr.pop_back();
-            }
+            used[i] = 1;
+            path.push_back(candidates[i]);
+            backtrack(i+1, sum+candidates[i], target);
+            path.pop_back();
+            used[i] = 0;
         }
     }
 };

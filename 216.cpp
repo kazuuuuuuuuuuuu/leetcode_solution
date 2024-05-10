@@ -1,35 +1,32 @@
+// 回溯 加 剪枝
 class Solution {
 public:
-    int k;
-    int n;
+    vector<vector<int>> ans;
+    vector<int> path;
     vector<vector<int>> combinationSum3(int k, int n) 
     {
-        this->k = k; // k numbers
-        this->n = n; // sum up to n
-        vector<vector<int>> ans;
-        vector<int> curr;
-        backtrack(ans, curr, 0, 0, 1);
+        backtrack(1, k, n, 0);
         return ans;
     }
 
-    void backtrack(vector<vector<int>> &ans, vector<int> &curr, int sum, int i, int start)
+    void backtrack(int start, int k, int n, int sum)
     {
-        // base case
-        if(i==k&&sum!=n)
-            return;
-        if(i==k&&sum==n)
+        if(path.size()==k)
         {
-            ans.push_back(curr);
+            if(n==sum)
+                ans.push_back(path);
             return;
         }
-        for(int num=start;num<=9;num++)
+
+        for(int i=start;i<=9;i++)
         {
-            if(sum+num<=n)
-            {
-                curr.push_back(num);
-                backtrack(ans, curr, sum+num, i+1, num+1);
-                curr.pop_back();
-            }
+            if(9-i+1<k-path.size()) // 第一种剪枝
+                continue;
+            if(sum+i>n) // 第二种剪枝
+                continue;
+            path.push_back(i);
+            backtrack(i+1, k, n, sum+i);
+            path.pop_back();
         }
     }
 };
