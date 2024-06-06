@@ -1,44 +1,56 @@
 class Solution {
 public:
-    int length;
-    vector<string> strs;
     vector<vector<vector<int>>> memo;
+    vector<string> strs;
 
     int findMaxForm(vector<string>& strs, int m, int n) 
     {
+        int length = strs.size();
+        memo = vector<vector<vector<int>>> (m+1, vector<vector<int>> (n+1, vector<int> (length, -1)));
         this->strs = strs;
-        length = strs.size();
-        memo = vector<vector<vector<int>>> (length, vector<vector<int>> (m+1, vector<int> (n+1, -1)));
-        return dp(0, m, n);
+        return dp(m, n, length-1);
     }
 
-    // return the answer to the original problem
-    int dp(int i, int m, int n)
+    // dp 含义在重量为(m, n)的状态下 该背包最多装下多少东西
+    int dp(int m, int n, int i)
     {
-        if(i==length)
-            return 0;
-        if(memo[i][m][n]!=-1)
-            return memo[i][m][n];
-
-        //cout << "i:" << i << " m:" << m << " n:" << n <<  endl; 
-        string curr = strs[i];
-        int curr_m = 0;
-        int curr_n = 0;
-        for(auto a : curr)
+        string str = strs[i];
+        int num_0 = 0; 
+        int num_1 = 0;
+        for(char a : str)
         {
             if(a=='0')
-                curr_m ++;
+                num_0 ++;
             else
-                curr_n ++;
+                num_1 ++;
         }
 
-        int ret = dp(i+1, m, n);
-        if(curr_m<=m&&curr_n<=n)
-            ret = max(ret, 1+dp(i+1, m-curr_m, n-curr_n));
 
-        memo[i][m][n] = ret;
+        // 到达最后一个元素
+        if(i==0)
+        {
+            if(m>=num_0&&n>=num_1)
+                return 1;
+            else
+                return 0;
+        }
 
-        return ret; 
+        if(memo[m][n][i]!=-1)
+            return memo[m][n][i];
+
+        int ans = 0;
+        // 当前元素可以装下 取最大
+        if(m>=num_0&&n>=num_1)
+        {
+            ans = max(dp(m, n, i-1), dp(m-num_0, n-num_1, i-1)+1);
+        }
+        // 不能装下 跳过这个元素
+        else
+        {
+            ans = dp(m, n, i-1);
+        }
+        memo[m][n][i] = ans;
+        return ans;
     }
 };
 
@@ -78,3 +90,5 @@ public:
 
     }
 };
+
+

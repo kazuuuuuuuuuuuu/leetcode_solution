@@ -1,35 +1,31 @@
 class Solution {
 public:
-    // memoize the result for each state
     vector<int> nums;
     vector<int> memo;
 
     int rob(vector<int>& nums) 
     {
-        if(nums.size()==1)
-            return nums[0];
-
         this->nums = nums;
         memo = vector<int> (nums.size(), -1);
+
         return dp(nums.size()-1);
     }
 
-    // decide what dp returns and takes
-
+    // 考虑到i 可以获取的最大金币数
     int dp(int i)
     {
         if(i==0)
             return nums[0];
         if(i==1)
-            return max(nums[0], nums[1]);
+            return nums[0]>nums[1]?nums[0]:nums[1];
+
         if(memo[i]!=-1)
             return memo[i];
-        // 先保存 再返回
-        // 递归算法这里是使用dp() 得到其他状态的结果
-        // recurrence relation
-        memo[i] = max(dp(i-2)+nums[i], dp(i-1));
-        return memo[i];
-    }
+        // max（拿i处的金币，不拿i处的金币）
+        int ans = max(nums[i]+dp(i-2), dp(i-1));
+        memo[i] = ans;
+        return ans;
+    }  
 };
 
 // we only visit each state once 

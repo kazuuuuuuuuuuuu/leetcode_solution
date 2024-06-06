@@ -1,36 +1,55 @@
-// 先找一个词 再找下一个词 state to the next state
-// 他下一个词是对的 他就是对的
+
 class Solution {
 public:
     unordered_set<string> set;
+    vector<string> wordDict;
     string s;
-    vector<int> seen;
+    vector<int> memo;
+    
     bool wordBreak(string s, vector<string>& wordDict) 
     {
+        for(string word : wordDict)
+        {
+            set.insert(word);
+        }
+        this->wordDict = wordDict;
         this->s = s;
-        seen = vector<int> (s.size(), -1);
-        set = unordered_set<string>(wordDict.begin(), wordDict.end());
+        memo = vector<int> (s.size(), -1);
+        
         return dp(0);
     }
 
-    bool dp(int start)
+    bool dp(int i)
     {
-        if(start==s.size())
+        if(i==s.size())
             return true;
 
-        if(seen[start]!=-1)
-            return seen[start];
+        if(memo[i]!=-1)
+            return memo[i];
 
-        bool ret = false;
-        for(int end=start;end<s.size();end++)
+        bool ans = false;
+        // 该状态由下一个状态的集合得来
+        for(string word : wordDict)
         {
-            string substring = s.substr(start, end-start+1);
-            if(set.find(substring)!=set.end())
+            int length = word.size();
+            if((i+length)<=s.size())
             {
-                ret = ret || dp(end+1);
-            } 
+                if(is_valid(i, length)&&dp(i+length))
+                {
+                    ans = true;
+                    break;
+                }
+            }
         }
-        seen[start] = ret;
-        return ret;
+        memo[i] = ans;
+        return ans;
+    }
+
+    bool is_valid(int start, int length)
+    {
+        string word = s.substr(start, length);
+        if(set.find(word)!=set.end())
+            return true;
+        else return false;
     }
 };

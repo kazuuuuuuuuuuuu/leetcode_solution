@@ -1,38 +1,33 @@
-// dp就是递归算法加保存结果 memoize
 class Solution {
 public:
-    unordered_map<int, int> memo;
     vector<int> coins;
-    int target;
+    vector<int> memo;
     int coinChange(vector<int>& coins, int amount) 
     {
-        target = amount;
         this->coins = coins;
+        memo = vector<int> (amount+1, -1);
         int ans = dp(amount);
-        if(ans==target+1)
-            return -1;
-        return ans;    
+        if(ans==INT_MAX) return -1;
+        return ans;
     }
 
-    //what dp returns and takes
-    // 到达这个amount所需要的最小数量
-    int dp(int amount)
+    int dp(int curr)
     {
-        if(amount==0)
-            return 0;
-        if(memo.find(amount)!=memo.end())
-            return memo[amount];
-        int ans = target+1;
-        for(int &coin : coins)
+        if(curr==0) return 0;
+        if(curr<0) return INT_MAX;
+
+        if(memo[curr]!=-1) return memo[curr];
+        int ans = INT_MAX;
+        for(int coin : coins)
         {
-            if(amount-coin>=0)
+            int result = dp(curr-coin);
+            if(result==INT_MAX)
             {
-                ans = min(ans, dp(amount-coin) + 1);
+               continue;
             }
-                
+            ans = min(ans, dp(curr-coin)+1);    
         }
-        
-        memo[amount] = ans;
+        memo[curr] = ans;
         return ans;
     }
 };
@@ -40,9 +35,7 @@ public:
 
 
 
-
-
-// 这个方法是对的但是一定会超时
+// backtrack这个方法是对的但是一定会超时
 class Solution {
 public:
     int amount;
@@ -88,3 +81,6 @@ public:
         
     }
 };
+
+
+
