@@ -1,58 +1,54 @@
-// state and state transfer
-// dp takes and returns
-// memo
+// two-dimension status
 
 class Solution {
 public:
-    vector<int> nums;
     int n;
+    vector<int> nums;
     vector<vector<int>> memo;
     int rob(vector<int>& nums) 
     {
-        n = nums.size();
         this->nums = nums;
-        memo = vector<vector<int>> (n, vector<int> (2, -1));
-        return dp(0, 0);
+        n = nums.size();
+        memo = vector<vector<int>>(n, vector<int>(2,-1));
+        return dp(0, -1);
     }
-
-    // 增加一个state variable flag记录状态
-    int dp(int i, int flag)
+    // 考虑i及以后所有元素
+    int dp(int i, int first_is_robbed)
     {
-        // flag将会影响base case
         if(i==n-1)
         {
-            int num = nums[i];
-            if(flag==1)
+            if(first_is_robbed==0)
+            {
                 return 0;
+            }
             else
-                return num;
+            {
+                return nums[n-1];
+            }
         }
-        // base case 2
-        if(i>n-1)
-            return 0;
 
-        if(memo[i][flag]!=-1)
-            return memo[i][flag];
+        if(i>n-1)
+        {
+            return 0;
+        }
 
         if(i==0)
         {
-            int num = nums[i];
-            int ans = dp(i+1, 0);;
-            // do nothing
-            ans = max(ans, dp(i+2, 1)+num);
-            memo[i][flag] = ans;
-            return ans;
-        } 
+            return max(dp(i+1, 1), dp(i+2, 0)+nums[0]);
+        }
+        
+        if(memo[i][first_is_robbed]!=-1)
+        {
+            return memo[i][first_is_robbed];
+        }
 
-        int num = nums[i];
-        int ans = dp(i+1, flag);
-        // do nothing
-        ans = max(ans, dp(i+2, flag)+num);
-        memo[i][flag] = ans;
-        return ans;        
+        int ans;
+        ans = dp(i+1, first_is_robbed);
+        ans = max(ans, dp(i+2, first_is_robbed)+nums[i]);
+        memo[i][first_is_robbed] = ans;
+        return ans;
     }
 };
-
 
 class Solution {
 public:
